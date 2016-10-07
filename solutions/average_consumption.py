@@ -17,9 +17,7 @@ def per_group(partition):
     return result.set_index(partition.index.name)
 
 
-df = dd.read_csv("data/nfs/NFS*.csv")
-divisions = list(range(1974, 2001)) + [2000]
-df = df.set_partition('styr', divisions=divisions)
+df = dd.read_csv("data/nfs/NFS*.csv").set_index('styr', sorted=True)
 
 res = df.map_partitions(per_group,
                         meta=[('minfd', float), ('pc_consumption', float)])
@@ -27,4 +25,4 @@ res = df.map_partitions(per_group,
 with ProgressBar():
     average = res.compute()
 
-average.head()
+average
