@@ -1,17 +1,15 @@
 import pandas as pd
 import dask.dataframe as dd
 
-df = dd.read_csv("data/nfs/NFS*.csv")
-food_mapping = pd.read_csv("data/nfs/food_mapping.csv")
+df = dd.read_csv("data/nfs/NFS*.csv").set_index('styr', sorted=True)
+food_mapping = pd.read_csv("data/nfs/food_mapping.csv", index_col='minfd')
 
-df1974 = df.get_partition(0)
-minfd74 = (df1974.groupby('minfd')
-           .apply(len, meta='size')
-           .compute()
-           .idxmax())
+df_1974 = df.loc[1974]
 
-# alternatively, use the category type
-# you first have to materialize the categorical
-# though this should work with fixes in pandas 0.18.2
+top_84 = df_1974.minfd.value_counts().nlargest(10).compute()
 
-df1974.minfd.astype('category').compute().describe()['top']
+top = df.minfd.value_counts().nlargest(10).compute()
+
+food_mapping.loc[401]
+food_mapping.loc[25201]
+food_mapping.loc[27001]

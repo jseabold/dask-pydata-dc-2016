@@ -3,9 +3,10 @@
 Create the environment for this tutorial:
 
 ```
-conda create -n dask-tutorial -y --no-default-packages --override-channels -c conda-forge -c defaults nomkl graphviz h5py ipython jupyter dask==0.11.0
+conda create -n dask-tutorial -y --no-default-packages --override-channels -c conda-forge -c defaults nomkl h5py ipython jupyter dask==0.11.0 distributed
 source activate dask-tutorial
 pip install graphviz
+pip install dask --upgrade
 ```
 
 Start your jupyter notebook:
