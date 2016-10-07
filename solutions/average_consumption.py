@@ -8,7 +8,7 @@ def average_cons(hhold):
     return daily
 
 
-def grouper(partition):
+def per_group(partition):
     group = partition.groupby(['minfd'])
     # call reset_index so we don't get a MultiIndex
     result = group.apply(average_cons).reset_index()
@@ -18,11 +18,11 @@ def grouper(partition):
 
 
 df = dd.read_csv("data/nfs/NFS*.csv")
-partitions = list(range(1974, 2001)) + [2000]
-df = df.set_partition('styr', divisions=partitions)
+divisions = list(range(1974, 2001)) + [2000]
+df = df.set_partition('styr', divisions=divisions)
 
-res = df.map_partitions(grouper,
-                        meta=[('minfd', 'f8'), ('pc_consumption', 'f8')])
+res = df.map_partitions(per_group,
+                        meta=[('minfd', float), ('pc_consumption', float)])
 
 with ProgressBar():
     average = res.compute()
